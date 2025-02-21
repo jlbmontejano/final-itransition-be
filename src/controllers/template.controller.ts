@@ -162,41 +162,6 @@ export const getTemplates = asyncHandler(
 	}
 );
 
-//@desc   Gets a template's questions
-//@route  GET /templates/:id/questions
-//@access Private
-export const getTemplateQuestions = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		try {
-			const { id } = req.params;
-
-			if (!id) {
-				return res
-					.status(400)
-					.json({ success: false, message: "All fields are required." });
-			}
-
-			const templateId = verifyID(id);
-
-			const response = await prisma.question.findMany({
-				where: {
-					templateId,
-				},
-			});
-
-			return res.status(200).json({
-				success: true,
-				data: response,
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				message: "Internal error. Please try again.",
-			});
-		}
-	}
-);
-
 //@desc   Deletes a template
 //@route  DELETE /templates/:id
 //@access Private

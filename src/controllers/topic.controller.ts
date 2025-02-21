@@ -33,67 +33,6 @@ export const createTopic = asyncHandler(
 	}
 );
 
-//@desc   Get a topic
-//@route  GET /topics/:id
-//@access Private
-export const getTopic = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		try {
-			const { id } = req.params;
-
-			if (!id) {
-				return res
-					.status(400)
-					.json({ success: false, message: "All fields are required." });
-			}
-
-			const topicId = verifyID(id);
-
-			const response = await prisma.topic.findFirst({
-				where: {
-					id: topicId,
-				},
-				select: {
-					id: true,
-					text: true,
-				},
-			});
-
-			return res.status(200).json({ success: true, data: response });
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				message: "Internal error. Please try again.",
-			});
-		}
-	}
-);
-
-//@desc   Get all topics
-//@route  GET /topics
-//@access Private
-export const getTopics = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		try {
-			const response = await prisma.topic.findMany({
-				select: {
-					id: true,
-					text: true,
-				},
-			});
-
-			return res
-				.status(200)
-				.json({ success: true, count: response.length, data: response });
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				message: "Internal error. Please try again.",
-			});
-		}
-	}
-);
-
 //@desc   Deletes a topic
 //@route  DELETE /topics/:id
 //@access Private
