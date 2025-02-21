@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  password        String
+  name            String
+  role            Role       @default(USER)
+  templatesShared Template[] @relation("SharedTemplates")
+  createdAt       DateTime   @default(now())
+  comments        Comment[]
+  forms           Form[]
+  likes           Likes[]
+  templates       Template[]
+}
+
+model Template {
+  id              Int        @id @default(autoincrement())
+  title           String
+  description     String
+  public          Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  userId          Int
+  topicId         Int
+  usersSharedWith User[]     @relation("SharedTemplates")
+  tags            Tag[]
+  likes           Likes[]
+  questions       Question[]
+  comments        Comment[]
+  forms           Form[]
+  topic           Topic      @relation(fields: [topicId], references: [id])
+  creator         User       @relation(fields: [userId], references: [id])
+}
+
+model Question {
+  id         Int          @id @default(autoincrement())
+  text       String
+  type       QuestionType
+  options    Option[]
+  createdAt  DateTime     @default(now())
+  templateId Int
+  template   Template     @relation(fields: [templateId], references: [id], onDelete: Cascade)
+}
+
+model Option {
+  id         Int      @id @default(autoincrement())
+  text       String
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Form {
+  id         Int      @id @default(autoincrement())
+  templateId Int
+  userId     Int
+  createdAt  DateTime @default(now())
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  text       String
+  templateId Int
+  userId     Int
+  createdAt  DateTime @default(now())
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Likes {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  templateId Int
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Topic {
+  id       Int        @id @default(autoincrement())
+  text     String     @unique
+  template Template[]
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  text      String     @unique
+  templates Template[]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum QuestionType {
+  TEXT
+  MULTITEXT
+  NUMBER
+  CHECKBOX
+}
