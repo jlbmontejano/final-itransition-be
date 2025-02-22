@@ -1,7 +1,20 @@
+import bcrypt from "bcrypt";
 import prisma from "./prismaClient";
 
 async function main() {
-	const response = await prisma.topic.createMany({
+	const saltRounds = 10;
+	const hashedPassword = await bcrypt.hash("1", saltRounds);
+
+	const admin = await prisma.user.create({
+		data: {
+			name: "Admin",
+			email: "admin@test.com",
+			password: hashedPassword,
+			role: "ADMIN",
+		},
+	});
+
+	const topics = await prisma.topic.createMany({
 		data: [
 			{ text: "Math" },
 			{ text: "History" },
