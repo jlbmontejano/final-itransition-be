@@ -11,7 +11,6 @@ export const signupUser = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { name, email, password } = req.body;
-			console.log(name, email, password);
 			const saltRounds = 10;
 
 			if (!name || !email || !password) {
