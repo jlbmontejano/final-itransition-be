@@ -36,16 +36,19 @@ export const signupUser = asyncHandler(
 				},
 			});
 
+			if (!response) {
+				return res
+					.status(400)
+					.json({ success: false, message: "Error creating user." });
+			}
+
 			return res.status(201).json({
 				success: true,
 				data: response,
 			});
 		} catch (err) {
 			console.log(err);
-			if (
-				err instanceof PrismaClientKnownRequestError &&
-				err.code === "P2002"
-			) {
+			if (err instanceof PrismaClientKnownRequestError) {
 				return res.status(400).json({
 					success: false,
 					message: "Email is already used.",
@@ -76,7 +79,7 @@ export const loginUser = asyncHandler(
 				});
 			}
 
-			const response = await prisma.user.findFirst({
+			const response = await prisma.user.findUnique({
 				where: {
 					email,
 				},
