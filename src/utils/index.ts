@@ -1,20 +1,18 @@
+import { Likes, Tag } from "@prisma/client";
+
 type Template = {
-	id: string;
+	id: number;
 	title: string;
 	creator: {
-		id: string;
+		id: number;
 		name: string;
 	};
 	topic: {
-		id: string;
+		id: number;
 		text: string;
 	};
-	tags: string[];
-	likes: {
-		user: {
-			id: string;
-		};
-	}[];
+	tags: Tag[];
+	likes: Likes[];
 	_count: {
 		likes: number;
 	};
@@ -24,7 +22,7 @@ export const includeTemplate = {
 	creator: { select: { id: true, name: true } },
 	tags: true,
 	topic: true,
-	likes: { select: { user: { select: { id: true } } } },
+	likes: { select: { userId: true } },
 	_count: { select: { likes: true } },
 };
 
@@ -38,10 +36,11 @@ export const verifyID = (id: string) => {
 	return sanitizedId;
 };
 
-export const formatTemplate = (template: any) => {
+export const formatTemplate = (template: any): Template => {
 	const formattedTemplate = {
 		...template,
-		likedUsersIds: template.likes.map((like: any) => like.user.id),
+		tags: template.tags.map((tag: Tag) => tag.text),
+		likedUsersIds: template.likes.map((like: Likes) => like.userId),
 		likesCount: template._count.likes,
 	};
 
