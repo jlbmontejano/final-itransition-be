@@ -1,4 +1,4 @@
-import { Question, Tag, Option } from "@prisma/client";
+import { Question } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
@@ -12,8 +12,6 @@ export const createTemplate = asyncHandler(
 		try {
 			const { title, description, topicId, tags, questions, creatorId } =
 				req.body;
-
-			console.log(title, description, topicId, tags, questions, creatorId);
 
 			if (
 				!title ||
