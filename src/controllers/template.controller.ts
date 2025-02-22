@@ -183,7 +183,10 @@ export const deleteTemplate = asyncHandler(
 				},
 			});
 
-			return res.status(204).end();
+			return res.status(200).json({
+				success: true,
+				message: "Template deleted.",
+			});
 		} catch (err) {
 			console.log(err);
 			return res.status(500).json({
