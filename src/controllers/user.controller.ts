@@ -200,3 +200,39 @@ export const getUserTemplates = asyncHandler(
 		}
 	}
 );
+
+//@desc   Get all user's templates
+//@route  GET /users/:id/templates
+//@access Private
+export const getUserForms = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { id } = req.params;
+
+			if (!id) {
+				return res
+					.status(400)
+					.json({ success: false, message: "All fields are required." });
+			}
+
+			const userId = verifyID(id);
+
+			const response = await prisma.form.findMany({
+				where: {
+					userId: userId,
+				},
+			});
+
+			return res.status(200).json({
+				success: true,
+				count: response.length,
+				data: response,
+			});
+		} catch (err) {
+			return res.status(500).json({
+				success: false,
+				message: "Internal error. Please try again.",
+			});
+		}
+	}
+);
