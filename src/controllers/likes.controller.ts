@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
-import { verifyID } from "../utils";
+import verifyID from "../utils/verifyId";
 
 //@desc   Toggle a user's like
 //@route  PUT /likes
@@ -17,6 +17,7 @@ export const updateLike = asyncHandler(
 					message: "All fields are required.",
 				});
 			}
+
 			const sanitizedTemplateId = verifyID(templateId);
 			const sanitizedUserId = verifyID(userId);
 

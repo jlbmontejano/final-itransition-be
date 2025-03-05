@@ -2,7 +2,9 @@ import { Question } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
-import { formatTemplate, includeTemplate, verifyID } from "../utils";
+import formatTemplate from "../utils/formatTemplate";
+import includeTemplate from "../utils/includeTemplate";
+import verifyID from "../utils/verifyId";
 
 //@desc   Create a template
 //@route  POST /templates

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
-import { verifyID } from "../utils";
+import verifyID from "../utils/verifyId";
 
 //@desc   Create a topic
 //@route  POST /topics
